@@ -1,0 +1,73 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+     <title>Document</title>
+ </head>
+ <body>
+     <canvas id="gameCanvas" width="900" height="600"></canvas>
+ </body>
+ <script>
+    var canvas;  // Creates a container which is used in refering canvas
+    var canvasContext;
+    var ballx = 5; // Gives the x axis position of the ball.
+    var ballspeedx = 5;
+     window.onload = function() {
+         console.log("Hello World!");
+         canvas = document.getElementById('gameCanvas');
+         canvasContext = canvas.getContext('2d');
+         // getContext returns an object containing all the properties
+         // and functions used to draw on the canvas.
+        // local variable.
+        var framePerSecond = 30;
+        setInterval(callBoth, 1000/framePerSecond);
+         // Calls the function in the first argument and the second 
+         //argument is the interval between the call in milli sec.
+         // We can also use inline definition instead of defining a 
+         // new function.
+         // The difference is that inline function cannot be called elsewhere.
+ } 
+function callBoth()
+{
+    drawEverything();
+    moveEverything();
+}
+ function drawEverything()
+{
+        console.log(ballx);
+        // Puts blue colour in the canvas.
+         canvasContext.fillStyle = 'blue';
+         canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+        // Will fill the page with page from x = 0, y = 0
+        // to the given position. Note that origin starts from the left top corner.
+        colorCircle(ballx, 40, 40,'white');
+        
+        // Drawing the sidebars.
+        canvasContext.fillStyle = 'white';
+        canvasContext.fillRect(0, 210, 10, 100);
+}
+function moveEverything()
+{
+    ballx = ballx + ballspeedx;
+    if(ballx > canvas.width || ballx < 0)
+    {
+        ballspeedx = -ballspeedx;
+    }
+}
+
+function colorCircle(x, y, r, color_circle)
+{
+    // To draw a circle.
+    canvasContext.fillStyle = color_circle;
+    canvasContext.beginPath();
+    canvasContext.arc(x, y, r, 0, Math.PI*2, true);
+    // center refers to the circles center.
+    // canvasContext.arc(center-x, center-y, radius, angle-initial, angle-final, true)
+    // true or false signifies whether the arc is drawn clockwise of counter clock wise.
+    canvasContext.fill();
+
+}
+ </script>
+ </html>
