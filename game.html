@@ -13,7 +13,17 @@
     var canvas;  // Creates a container which is used in refering canvas
     var canvasContext;
     var ballx = 5; // Gives the x axis position of the ball.
-    var ballspeedx = 5;
+    var ballspeedx = 8; // Speed of the movement of the ball.
+    var bally = 5; // Gives the x axis position of the ball.
+    var ballspeedy = 8; // Speed of the movement of the ball.
+    var paddle1y = 250;
+    var paddle2y = 250;
+    const PADDLE_HEIGHT = 100;
+    var thick = 10; //  Stands for paddle thickness.
+    var player1_score = 0;
+    var computer_score = 0;
+    var showingwiningscreen = false;
+    const WIN_SCORE = 2;
      window.onload = function() {
          console.log("Hello World!");
          canvas = document.getElementById('gameCanvas');
@@ -28,6 +38,18 @@
          // We can also use inline definition instead of defining a 
          // new function.
          // The difference is that inline function cannot be called elsewhere.
+        
+        canvas.addEventListener('mousemove',
+                    function(evt) {
+                        var mousePos = calculateMousePos(evt);
+                        paddle1y = mousePos.y - (PADDLE_HEIGHT)/2;
+                        //paddle2y = mousePos.y - (PADDLE_HEIGHT)/2;
+                    });
+        // The above function contains inline definition.
+        // mousemove is a keyword signifying the movement of mouse.
+        // This function gets called whenever that event occurs.
+        // evt(event) holds the information about mouse.
+        // This is passed to the function.
  } 
 function callBoth()
 {
@@ -36,25 +58,80 @@ function callBoth()
 }
  function drawEverything()
 {
-        console.log(ballx);
+        if(showingwiningscreen)
+        {
+            canvasContext.fillStyle = 'blue';
+            canvasContext.fillRect(0, 0, canvas.width, canvas.height)
+            canvasContext.fillStyle = "White";
+            canvasContext.fillText("The winner is ", 100, 100);
+            return;
+        }
+        
+        
         // Puts blue colour in the canvas.
          canvasContext.fillStyle = 'blue';
          canvasContext.fillRect(0, 0, canvas.width, canvas.height);
         // Will fill the page with page from x = 0, y = 0
         // to the given position. Note that origin starts from the left top corner.
-        colorCircle(ballx, 40, 40,'white');
+        colorCircle(ballx, bally, 10,'white');
         
-        // Drawing the sidebars.
+        // Drawing paddle-1.
         canvasContext.fillStyle = 'white';
-        canvasContext.fillRect(0, 210, 10, 100);
+        console.log(paddle1y);
+        canvasContext.fillRect(0, paddle1y, thick, 100);
+        // Drawing paddle-2
+        canvasContext.fillRect(canvas.width - thick, paddle2y, 10, 100);
+        
+        // Printing out text.
+        canvasContext.fillText(player1_score, canvas.width/4, canvas.height/4)
+        canvasContext.fillText(computer_score, (3*canvas.width)/4, canvas.height/4)
 }
 function moveEverything()
 {
-    ballx = ballx + ballspeedx;
-    if(ballx > canvas.width || ballx < 0)
+    if(showingwiningscreen)
     {
-        ballspeedx = -ballspeedx;
+        return;
     }
+    computerMovement(); // This movement moves the paddle.
+    ballx = ballx + ballspeedx;
+    bally = bally + ballspeedy;
+    if(ballx < 0)
+    {
+        // Condition for paddle touching ball.
+        if(bally > paddle1y && bally < (paddle1y + PADDLE_HEIGHT))
+        {
+
+            ballspeedx = -ballspeedx;
+            deltaY = ballY - (paddle1y + PADDLE_HEIGHT/2);
+            ballspeedy = deltaY*0.35;
+        }
+        // Point lost. Resetting ball.
+        else
+        {
+            computer_score += 1;
+            ballReset();
+        }
+    }
+    else if(bally < 0 || bally > canvas.height)
+    {
+        ballspeedy = -ballspeedy;
+    }
+    else if(ballx > canvas.width)
+    {
+        if(bally > paddle2y && bally < (paddle2y + PADDLE_HEIGHT))
+        {
+            ballspeedx = -ballspeedx;
+            deltaY = ballY - (paddle2y + PADDLE_HEIGHT/2);
+            ballspeedy = deltaY*0.5;
+        }
+        // Point lost. Resetting ball.
+        else
+        {
+            player1_score += 1;
+            ballReset();
+        }
+    }
+    
 }
 
 function colorCircle(x, y, r, color_circle)
@@ -67,7 +144,47 @@ function colorCircle(x, y, r, color_circle)
     // canvasContext.arc(center-x, center-y, radius, angle-initial, angle-final, true)
     // true or false signifies whether the arc is drawn clockwise of counter clock wise.
     canvasContext.fill();
+}
+function calculateMousePos(evt)
+{
+    var rect = canvas.getBoundingClientRect();
+    var root = document.documentElement;
+    // The lines below gives the coordinates within canvas 
+    // taking into account the scroll and where the canvas exists.
+    var mouseX = evt.clientX - rect.left - root.scrollLeft;
+    var mouseY = evt.clientY - rect.top - root.scrollTop;
+    return {
+        x: mouseX,
+        y:mouseY
+    }
 
 }
+// function that resets the ball when paddle misses it.
+function ballReset()
+{
+    if(player1_score >= WIN_SCORE || computer_score >= WIN_SCORE)
+    {
+        player1_score = 0;
+        computer_score = 0;
+        showingwiningscreen = true;
+    }
+    ballspeedx = -ballspeedx;
+    ballx = canvas.width/2;
+    bally = canvas.height/2;
+}
+
+function computerMovement()
+{
+    paddle2ycenter = paddle2y + PADDLE_HEIGHT/2;
+    if(paddle2ycenter < bally - 35) // If paddle 2 is above the ball then,
+    {
+        paddle2y += 6;
+    } 
+    else if(paddle2ycenter > bally + 35)
+    {
+        paddle2y -= 6;
+    }
+}
+
  </script>
  </html>
