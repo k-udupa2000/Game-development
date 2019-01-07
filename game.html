@@ -7,7 +7,7 @@
      <title>Document</title>
  </head>
  <body>
-     <canvas id="gameCanvas" width="900" height="600"></canvas>
+     <canvas id="gameCanvas" width="1000" height="800"></canvas>
  </body>
  <script>
     var canvas;  // Creates a container which is used in refering canvas
@@ -27,6 +27,7 @@
      window.onload = function() {
          console.log("Hello World!");
          canvas = document.getElementById('gameCanvas');
+         console.log(canvas)
          canvasContext = canvas.getContext('2d');
          // getContext returns an object containing all the properties
          // and functions used to draw on the canvas.
@@ -38,32 +39,61 @@
          // We can also use inline definition instead of defining a 
          // new function.
          // The difference is that inline function cannot be called elsewhere.
-        
+
         canvas.addEventListener('mousemove',
                     function(evt) {
                         var mousePos = calculateMousePos(evt);
                         paddle1y = mousePos.y - (PADDLE_HEIGHT)/2;
-                        //paddle2y = mousePos.y - (PADDLE_HEIGHT)/2;
                     });
         // The above function contains inline definition.
         // mousemove is a keyword signifying the movement of mouse.
         // This function gets called whenever that event occurs.
         // evt(event) holds the information about mouse.
         // This is passed to the function.
+
+        // mousedown is a keyword. This returns an event whenever the mouse is clicked.
+        canvas.addEventListener('mousedown', handleMouseClick)
  } 
+function handleMouseClick()
+{
+    if(showingwiningscreen)
+    {
+        player1_score = 0;
+        computer_score = 0;
+        showingwiningscreen = false;
+    }
+}
 function callBoth()
 {
     drawEverything();
     moveEverything();
 }
- function drawEverything()
+
+function drawNet()
+{
+    for(var i = 0; i < canvas.height; i+=40)
+    {
+        canvasContext.fillRect(canvas.width/2 - 1, i, 2, 20);
+    }
+}
+
+function drawEverything()
 {
         if(showingwiningscreen)
         {
             canvasContext.fillStyle = 'blue';
             canvasContext.fillRect(0, 0, canvas.width, canvas.height)
             canvasContext.fillStyle = "White";
-            canvasContext.fillText("The winner is ", 100, 100);
+            if(player1_score >= WIN_SCORE)
+            {
+                
+                canvasContext.fillText("Congragulation! You are the winner!", 200, 100);
+            }
+            else
+            {
+                canvasContext.fillText("The computer got the better of you.", 200, 100);
+            }
+                canvasContext.fillText("Click to play again!", 300, 600);
             return;
         }
         
@@ -73,6 +103,8 @@ function callBoth()
          canvasContext.fillRect(0, 0, canvas.width, canvas.height);
         // Will fill the page with page from x = 0, y = 0
         // to the given position. Note that origin starts from the left top corner.
+       
+        // Calling a function which renders a circle.
         colorCircle(ballx, bally, 10,'white');
         
         // Drawing paddle-1.
@@ -82,9 +114,13 @@ function callBoth()
         // Drawing paddle-2
         canvasContext.fillRect(canvas.width - thick, paddle2y, 10, 100);
         
+        canvasContext.font = "normal 40px Verdana";
         // Printing out text.
         canvasContext.fillText(player1_score, canvas.width/4, canvas.height/4)
         canvasContext.fillText(computer_score, (3*canvas.width)/4, canvas.height/4)
+        canvasContext.fillText("Player", canvas.width/4 - 60, 50);
+        canvasContext.fillText("Computer", (3*canvas.width)/4 - 60, 50);
+        drawNet();
 }
 function moveEverything()
 {
@@ -151,6 +187,7 @@ function calculateMousePos(evt)
     var root = document.documentElement;
     // The lines below gives the coordinates within canvas 
     // taking into account the scroll and where the canvas exists.
+    // These are keywords and exact syntax has to be maintained.
     var mouseX = evt.clientX - rect.left - root.scrollLeft;
     var mouseY = evt.clientY - rect.top - root.scrollTop;
     return {
@@ -164,8 +201,6 @@ function ballReset()
 {
     if(player1_score >= WIN_SCORE || computer_score >= WIN_SCORE)
     {
-        player1_score = 0;
-        computer_score = 0;
         showingwiningscreen = true;
     }
     ballspeedx = -ballspeedx;
