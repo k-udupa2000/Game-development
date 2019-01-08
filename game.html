@@ -23,6 +23,9 @@
     var player1_score = 0;
     var computer_score = 0;
     var showingwiningscreen = false;
+    var default_level = 1;
+    var levels = [1, 2, 3];
+    var next_game = true;
     const WIN_SCORE = 2;
      window.onload = function() {
          console.log("Hello World!");
@@ -52,8 +55,17 @@
         // This is passed to the function.
 
         // mousedown is a keyword. This returns an event whenever the mouse is clicked.
+        if(next_game == true)
+        {
+            canvas.addEventListener('mousedown', game_begin)
+        }
         canvas.addEventListener('mousedown', handleMouseClick)
+        
  } 
+function game_begin()
+{
+    next_game = false
+}
 function handleMouseClick()
 {
     if(showingwiningscreen)
@@ -65,8 +77,15 @@ function handleMouseClick()
 }
 function callBoth()
 {
+    if(next_game == true)
+    {
+        drawLevelPage();
+    }
+    else
+    {
     drawEverything();
     moveEverything();
+    }
 }
 
 function drawNet()
@@ -138,8 +157,9 @@ function moveEverything()
         {
 
             ballspeedx = -ballspeedx;
-            deltaY = ballY - (paddle1y + PADDLE_HEIGHT/2);
+            deltaY = bally - (paddle1y + PADDLE_HEIGHT/2);
             ballspeedy = deltaY*0.35;
+            playAudio();
         }
         // Point lost. Resetting ball.
         else
@@ -157,8 +177,8 @@ function moveEverything()
         if(bally > paddle2y && bally < (paddle2y + PADDLE_HEIGHT))
         {
             ballspeedx = -ballspeedx;
-            deltaY = ballY - (paddle2y + PADDLE_HEIGHT/2);
-            ballspeedy = deltaY*0.5;
+            deltaY = bally - (paddle2y + PADDLE_HEIGHT/2);
+            ballspeedy = deltaY*0.35;
         }
         // Point lost. Resetting ball.
         else
@@ -170,7 +190,7 @@ function moveEverything()
     
 }
 
-function colorCircle(x, y, r, color_circle)
+function colorCircle(x, y, r, color_circle) // color_circle is the color of the circle.
 {
     // To draw a circle.
     canvasContext.fillStyle = color_circle;
@@ -189,7 +209,7 @@ function calculateMousePos(evt)
     // taking into account the scroll and where the canvas exists.
     // These are keywords and exact syntax has to be maintained.
     var mouseX = evt.clientX - rect.left - root.scrollLeft;
-    var mouseY = evt.clientY - rect.top - root.scrollTop;
+   var mouseY = evt.clientY - rect.top - root.scrollTop;
     return {
         x: mouseX,
         y:mouseY
@@ -220,6 +240,26 @@ function computerMovement()
         paddle2y -= 6;
     }
 }
+function playAudio()
+{
+    var sound = new Audio("bounce.mp3");
+    sound.play();
+}
 
+function create_levels()
+{
+ 
+}
+function drawLevelPage()
+{
+    colorCircle(100, 100, 30, "white");
+    colorCircle(200, 100, 30, "white");
+
+}
+
+// TO DO'S
+// 1. Add levels to the game.
+// 2. Add sound to the game.
+// 3. Add borders and make the canvas element appear good.
  </script>
  </html>
