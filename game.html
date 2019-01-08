@@ -9,6 +9,7 @@
  <body>
      <canvas id="gameCanvas" width="1000" height="800"></canvas>
  </body>
+ <script src="moving.js"></script>
  <script>
     var canvas;  // Creates a container which is used in refering canvas
     var canvasContext;
@@ -55,12 +56,12 @@
         // This is passed to the function.
 
         // mousedown is a keyword. This returns an event whenever the mouse is clicked.
+        canvas.addEventListener('mousedown', handleMouseClick)
         if(next_game == true)
         {
             canvas.addEventListener('mousedown', game_begin)
         }
-        canvas.addEventListener('mousedown', handleMouseClick)
-        
+
  } 
 function game_begin()
 {
@@ -107,10 +108,12 @@ function drawEverything()
             {
                 
                 canvasContext.fillText("Congragulation! You are the winner!", 200, 100);
+                next_game = true;
             }
             else
             {
                 canvasContext.fillText("The computer got the better of you.", 200, 100);
+                next_game = true;
             }
                 canvasContext.fillText("Click to play again!", 300, 600);
             return;
@@ -179,6 +182,7 @@ function moveEverything()
             ballspeedx = -ballspeedx;
             deltaY = bally - (paddle2y + PADDLE_HEIGHT/2);
             ballspeedy = deltaY*0.35;
+            playAudio();
         }
         // Point lost. Resetting ball.
         else
@@ -245,14 +249,12 @@ function playAudio()
     var sound = new Audio("bounce.mp3");
     sound.play();
 }
-
-function create_levels()
-{
- 
-}
 function drawLevelPage()
 {
-    colorCircle(100, 100, 30, "white");
+    canvasContext.fillStyle = 'blue';
+    canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+    canvasContext.fillStyle = 'white'
+    colorCircle(100, 100, 30, 'white');
     colorCircle(200, 100, 30, "white");
 
 }
