@@ -10,6 +10,7 @@
      <p align = "center" style="font:bold">LETS PLAY AIR HOCKEY!</p>
      
     <p align = "center"><button id="button1" onclick="lvl1()" >Level 1</button><br><button onclick = "lvl2()">Level 2</button></p>
+    <p align = "center"><a href="rules.html">Rules</a></p>
  <p align = "center">    <canvas id="gameCanvas" width="1000" height="800" style="border: 3px solid black"></canvas</p>>
     
  </body>
@@ -19,13 +20,15 @@
      {
          move_paddle = 10;
          localStorage.setItem("var_move", move_paddle)
+         level = 1;
 
      }
      function lvl2()
      {
          move_paddle = 20;
          localStorage.setItem("var_move", move_paddle)
-        }
+        level = 2;    
+    }
     var canvas;  // Creates a container which is used in refering canvas
     var canvasContext;
     var ballx = 5; // Gives the x axis position of the ball.
@@ -40,12 +43,10 @@
     var computer_score = 0;
     var showingwiningscreen = false;
     var move_paddle = 10;
-    var default_level = 1;
     var beginning = true;
-    var levels = [1, 2, 3];
     var next_game = false;
-    const WIN_SCORE = 2;
-    var MY
+    const WIN_SCORE = 3;
+    var level = 1;
      window.onload = function() {
          canvas = document.getElementById('gameCanvas');
          console.log(canvas)
@@ -75,10 +76,6 @@
         // mousedown is a keyword. This returns an event whenever the mouse is clicked.
         canvas.addEventListener('mousedown', handleMouseClick)
         canvas.addEventListener('mousedown', game_begin)
-
-            
-
-
  } 
 function game_begin()
 {
@@ -108,75 +105,8 @@ function callBoth()
     }
 }
 
-function drawNet()
-{
-    for(var i = 0; i < canvas.height; i+=40)
-    {
-        canvasContext.fillRect(canvas.width/2 - 1, i, 2, 20);
-    }
-}
 
-function drawHLine()
-{
-    for(i = 0; i < canvas.width; i+=40)
-    {
-        canvasContext.fillRect(i, 70, 20, 2);
-        canvasContext.fillRect(i, canvas.height - 70, 20, 2)
-    }
-    
-}
-function drawEverything()
-{
-        if(beginning == true)
-        {
-        drawFirstPage();
-        return;
-        }
-        if(showingwiningscreen)
-        {
-            canvasContext.fillStyle = 'blue';
-            canvasContext.fillRect(0, 0, canvas.width, canvas.height)
-            canvasContext.fillStyle = "White";
-            if(player1_score >= WIN_SCORE)
-            {
-                
-                canvasContext.fillText("Congragulation! You are the winner!", 200, 100);
-               // next_game = true;
-            }
-            else
-            {
-                canvasContext.fillText("The computer got the better of you.", 200, 100);
-               // next_game = true;
-            }
-                canvasContext.fillText("Click to play again!", 300, 600);
-            return;
-        }
-        
-        // Puts blue colour in the canvas.
-         canvasContext.fillStyle = 'blue';
-         canvasContext.fillRect(0, 0, canvas.width, canvas.height);
-        // Will fill the page with page from x = 0, y = 0
-        // to the given position. Note that origin starts from the left top corner.
-       
-        // Calling a function which renders a circle.
-        colorCircle(ballx, bally, 10,'white');
-        
-        // Drawing paddle-1.
-        canvasContext.fillStyle = 'white';
-     //   console.log(paddle1y);
-        canvasContext.fillRect(0, paddle1y, thick, 100);
-        // Drawing paddle-2
-        canvasContext.fillRect(canvas.width - thick, paddle2y, 10, 100);
-        
-        canvasContext.font = "normal 40px Verdana";
-        // Printing out text.
-        canvasContext.fillText(player1_score, canvas.width/4, canvas.height/4)
-        canvasContext.fillText(computer_score, (3*canvas.width)/4, canvas.height/4)
-        canvasContext.fillText("Player", canvas.width/4 - 60, 50);
-        canvasContext.fillText("Computer", (3*canvas.width)/4 - 60, 50);
-        drawNet();
-        drawHLine();
-}
+
 
 function colorCircle(x, y, r, color_circle) // color_circle is the color of the circle.
 {
@@ -211,12 +141,7 @@ function ballReset()
     {
         showingwiningscreen = true;
     }
-    // Symbolizing a serve the ball again starts from the center but goes to the opposite court.
-    var sample = 2000;
-    setTimeout(function()
-    {
-        
-    }, sample);
+    // Symbolizing a serve : the ball again starts from the center but goes to the opposite court.
     ballspeedx = -ballspeedx;
     ballx = canvas.width/2;
     bally = canvas.height/2;
@@ -227,22 +152,8 @@ function playAudio()
     var sound = new Audio("bounce.mp3");
     sound.play();
 }
-function drawFirstPage()
-{
-    if(beginning = true)
-    {
-    canvasContext.fillStyle = 'blue';
-    canvasContext.fillRect(0, 0, canvas.width, canvas.height);
-    canvasContext.fillStyle = 'white';
 
-    canvasContext.fillText("Welcome to the game!. Click to begin", 200, 100);
-    }
-}
-
-// TO DO'S
-// 1. Add levels to the game.
-// 2. Add sound to the game.
-// 3. Add borders and make the canvas element appear good.
  </script>
+ <script src="draw.js"></script>
  <script src="moving.js"></script>
  </html>

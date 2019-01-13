@@ -55,16 +55,12 @@ function computerMovement()
     paddle2ycenter = paddle2y + PADDLE_HEIGHT/2; // Calculating the center y coordinate of paddle 2.
     if(paddle2ycenter < bally - 35) // If paddle 2 is above the ball then,
     {
-        console.log('TYpe is', typeof(move_paddle))
-        console.log('Inside the movement',(move_paddle))
-        console.log('value of paddle2y', paddle2y)
         paddle2y = paddle2y + Number(move_paddle);
-        console.log('The value after addition is ', paddle2y)
     } 
     else if(paddle2ycenter > bally + 35)
     {
       // console.log(move_paddle)
 
-        paddle2y = paddle2y - 12;
+        paddle2y = paddle2y - Number(move_paddle);
     }
 }
