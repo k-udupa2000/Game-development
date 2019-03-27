@@ -26,3 +26,4 @@ For extension, i began learning JSON(JavaScript Object Notation) format. But i g
 
 Realizing how the physics sinks with the game amazed me!
 In the process of building a game, i have fundamental understanding of javscript and would love to contribute to other web - development projects.
+The reference was from hands on intro to game development
